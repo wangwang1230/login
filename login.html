@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>登录</title>
+		<meta charset="utf-8">
+		<link type="text/css" rel="stylesheet" href="plugin/reset/normalize.min.css">
+		<link type="text/css" rel="stylesheet" href="css/default.css" />
+		<link type="text/css" rel="stylesheet" href="css/login.css">
+	</head>
+	<body>
+		<div class="login-warp" id="app">
+			<div class="login">
+				<div class="login_box">
+					<div class="login_switch">
+						<ul>
+							<li><a href="register.html">注册>></a></li>
+						</ul>
+					</div>
+					<div class="form_box">
+						<div class="avtar">
+							用户登录
+						</div>
+						<form action="">
+							<input type="text" id="username" v-model="username" class="username_text" name="username" placeholder="* 用户名">
+							<input type="password" id="password" v-model="password" class="password" name="password" placeholder="* 密码">
+						</form>
+						<div class="msg_box">
+							<span class="msg_text"></span>
+						</div>
+						<div class="signin">
+							<input type="submit" value="登录" @click="login">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="./node_modules/vue/dist/vue.js"></script>
+		<script src="./node_modules/axios/dist/axios.js"></script>
+		<script>
+			let vm = new Vue({
+				el:'#app',
+				data:{
+				    username:'',
+					password:''
+				},
+				methods:{
+				    login(){
+				        console.log(this);
+						if(this.username && this.password){
+						    let url = ''    //login 请求地址
+							let loginData = {   //交互数据
+								'username':this.username,
+								'password':this.password
+							}
+
+							axios.get(url,loginData)
+								.then(res=>{
+									/*
+									*  此处处理获取到的后台数据
+									* */
+									console.log(res);
+								})
+								.catch(err=>{
+									console.log(err);
+								})
+						}else{
+						    alert('请输入用户名和密码!');
+						}
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

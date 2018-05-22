@@ -1,0 +1,117 @@
+<html>
+	<head>
+		<title>注册</title>
+		<meta charset="UTF-8"/>
+		<link type="text/css" rel="stylesheet" href="plugin/reset/normalize.min.css">
+		<link type="text/css" rel="stylesheet" href="css/default.css" />
+		<link type="text/css" rel="stylesheet" href="css/login.css">
+	</head>
+	<body>
+	<div id="app">
+		<div class="login-warp">
+			<div class="login">
+				<div class="login_box">
+					<div class="form_box">
+						<div class="avtar">
+							<p style="color:#fff;font-size: 29px;margin-top:20px;"></p>用户注册</p>
+						</div>
+						<form action="">
+							<div class="register_msg" v-if="canShow1">
+								<span id="resultMsg">{{text_msg}}</span>
+							</div>
+							<input style="margin-top:0px;" type="text" id="username" v-model="username" class="username_text" name="username" placeholder="* 用户名">
+							<div class="register_msg">
+								<span id="usernameMsg"></span>
+							</div>
+							<input style="margin-top:0px;" type="password" id="password" autocomplete="off" v-model="password" class="password" name="password" placeholder="* 密码">
+							<div class="register_msg">
+								<span id="passMsg0"></span>
+							</div>
+							<input style="margin-top:0px;" type="password" id="passwordSign" autocomplete="off" v-model="passwordAgin" @blur="chekPassword" class="password" placeholder="* 确认密码">
+							<div class="register_msg" v-if="canShow">
+								<span id="passMsg1">{{text_msg}}</span>
+							</div>
+							<input style="margin-top:0px;" type="text" id="phoneNo" v-model="phoneNo" class="phoneNo" placeholder="* 手机号">
+							<div class="register_msg">
+								<span id="phoneMsg"></span>
+							</div>
+						</form>
+						<div class="msg_box">
+							<!--<span style="display: block;" class="msg_text">会员资费按浏览条数计费，0.5元/条</span>-->
+						</div>
+						<div class="signin">
+							<input type="submit" @click="registSubmit" value="注册成为会员">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mask">
+			<div class="mask-content">
+				<span class="close">+</span>
+				<p>温馨提示：</p>
+				<div class="mask-text"></div>
+			</div>
+		</div>
+	</div>
+	</body>
+	<script src="./node_modules/vue/dist/vue.js"></script>
+	<script src="./node_modules/axios/dist/axios.js"></script>
+	<script>
+		let vm = new Vue({
+			el:'#app',
+			data:{
+			    username:'',
+				password:'',
+                passwordAgin:'',
+				phoneNo:'',
+				text_msg:'',
+				canShow:false,
+				canShow1:false
+			},
+			methods:{
+			    chekPassword(){
+					if(this.password !== this.passwordAgin){
+						this.text_msg = '两次密码不一样';
+						this.canShow = true;
+					}else{
+					    this.text_msg = '';
+					    this.canShow = false;
+					}
+				},
+				registSubmit(){
+					if(!this.username && !this.password && !this.passwordAgin && !this.phoneNo){
+						this.text_msg = '请填写所有字段';
+						this.canShow1 = true;
+						return false;
+					}else{
+					    let url = 'http://localhost:8085/user/register'    //请求地址
+					    let registData = {     //交互数据
+					        'acctNo':this.username,
+							'password':this.passwordAgin,
+							'mobilePhone':this.phoneNo
+						}
+						axios.post(url,registData)
+							.then(res=>{
+							    if(res.data.meta.success){
+							        alert("注册成功！请登录");
+								}else {
+							        alert(res.data.meta.message);
+								}
+								console.log(res)
+							})
+							.catch(err=>{
+							    console.log(err);
+							})
+					}
+				}
+			}
+		})
+	</script>
+	<script src="plugin/jquery-1.12.4/jquery.min.js"></script>
+	<script>
+        $('.close').click(function(){
+            $('.mask').fadeOut();
+        })
+	</script>	
+</html>
